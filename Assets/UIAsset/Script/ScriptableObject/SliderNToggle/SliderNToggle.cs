@@ -27,5 +27,26 @@ namespace SGA.UI
             toggleValue[index] = value;
             toggleChangeAction?.Invoke(index);
         }
+        public void CopySize(SliderNToggle otherObject)
+        {
+            toggleValue = new bool[otherObject.toggleValue.Length];
+            sliderValue = new float[otherObject.sliderValue.Length];
+        }
+        public void CopyValue(SliderNToggle otherObject)
+        {
+            int length = otherObject.sliderValue.Length;
+            for (int i = 0; i < length; i++)
+            {
+                sliderValue[i] = otherObject.sliderValue[i];
+
+            }
+
+            length = otherObject.toggleValue.Length;
+            for (int i = 0; i < length; i++)
+            {
+                toggleValue[i] = otherObject.toggleValue[i];
+
+            }
+        }
     }
 }

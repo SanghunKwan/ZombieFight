@@ -24,6 +24,7 @@ namespace SGA.UI
         public bool visibleInStart;
 
         public Action InvisibleAction { get; set; }
+        public Action VisibleAction { get; set; }
 
         Vector3 originalPosition;
 
@@ -39,8 +40,12 @@ namespace SGA.UI
                 return;
 
             m_isVisible = onoff;
+
             if (!m_isVisible)
                 InvisibleAction?.Invoke();
+            else
+                VisibleAction?.Invoke();
+
 
             m_rectTransform.anchoredPosition += TrueOneFalseMinus(m_isVisible) * Screen.height * 2 * Vector2.up;
 

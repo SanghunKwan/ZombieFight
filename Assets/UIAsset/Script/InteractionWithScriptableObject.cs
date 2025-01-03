@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +8,10 @@ namespace SGA.UI
     public class InteractionWithScriptableObject : MonoBehaviour
     {
         [SerializeField] SliderNToggle sliderNToggleObject;
+        public SliderNToggle SliderNToggleObject { get { return sliderNToggleObject; } }
+
+        [Space(10)]
+        [SerializeField] UIWindow window;
 
         Toggle[] toggles;
         Slider[] sliders;
@@ -20,6 +23,7 @@ namespace SGA.UI
         [HideInInspector]
         public UsedChildNumber toggleUsingNum;
 
+        public Action backupAction { get; set; }
 
         private void Awake()
         {
@@ -30,12 +34,13 @@ namespace SGA.UI
             int sliderLength = sliders.Length;
             int toggleLength = toggles.Length;
 
-            sliderNToggleObject.SetSize(sliderLength, toggleLength);
             sibling2IndexSlider = new int[sliderLength];
             sibling2IndexToggle = new int[toggleLength];
         }
         private void Start()
         {
+            window.VisibleAction += GetValue;
+
             PrepareValue("Toggles", toggleUsingNum, ref sibling2IndexToggle, (num) => SetValue(toggles[num]));
 
             PrepareValue("Sliders", sliderUsingNum, ref sibling2IndexSlider, (num) => SetValue(sliders[num]));
@@ -96,6 +101,31 @@ namespace SGA.UI
         public void SetValue(Slider slider)
         {
             sliderNToggleObject.SetSliderValue(sibling2IndexSlider[slider.transform.GetSiblingIndex()], slider.value);
+        }
+
+        void GetValue()
+        {
+            int length = toggles.Length;
+
+            for (int i = 0; i < length; i++)
+            {
+                if (!toggles[i].gameObject.activeSelf)
+                    continue;
+
+                toggles[i].isOn = sliderNToggleObject.toggleValue[sibling2IndexToggle[i]];
+            }
+
+            length = sliders.Length;
+
+            for (int i = 0; i < length; i++)
+            {
+                if (!sliders[i].gameObject.activeSelf)
+                    continue;
+
+                sliders[i].value = sliderNToggleObject.sliderValue[sibling2IndexSlider[i]];
+            }
+            backupAction?.Invoke();
+
         }
 
     }
