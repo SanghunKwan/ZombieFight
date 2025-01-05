@@ -8,7 +8,7 @@ namespace EndlessExistence.Item_Interaction.Scripts.ObjectScripts
     {
         [Tooltip("Description = Item Description \n Strength = How much effect the item will have.")]
         [SerializeField] private bool haveDescription = false;
-        private string description;
+        [SerializeField]private string description;
         [SerializeField] private float strength;
 
         
